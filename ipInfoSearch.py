@@ -173,7 +173,7 @@ def getIpInfo(target):
                         printT(rtDel([17,20,10,10,10,10,10]),"bottom")
                 break
 
-def getTitle():
+def getTitle(mode=""):
     if args.icp:
         printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"top")
         tableDataList=[
@@ -190,7 +190,7 @@ def getTitle():
         ]
         printT(rtDel(tableDataList),fontStyle="bold")
         printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"middle")
-        csvWriter.writerow(["ip/domain", "反查域名", "百度权重", "移动权重", "360权重", "搜狗权重", "谷歌权重", "单位名称", "单位性质", "备案编号"])
+        csvWriter.writerow(["ip/domain", "反查域名", "百度权重", "移动权重", "360权重", "搜狗权重", "谷歌权重", "单位名称", "单位性质", "备案编号"]) if mode=="OnlyPrint" else 0
     else:
         printT(rtDel([17,20,10,10,10,10,10]),"top")
         tableDataList=[
@@ -204,7 +204,7 @@ def getTitle():
         ]
         printT(rtDel(tableDataList),fontStyle="bold")
         printT(rtDel([17,20,10,10,10,10,10]),"middle")
-        csvWriter.writerow(["ip/domain", "反查域名", "百度权重", "移动权重", "360权重", "搜狗权重", "谷歌权重"])
+        csvWriter.writerow(["ip/domain", "反查域名", "百度权重", "移动权重", "360权重", "搜狗权重", "谷歌权重"]) if mode=="OnlyPrint" else 0
 
 if __name__ == "__main__":
     fistDate = time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     file = open(outFilePath, "a+", encoding="GBK", newline="")
     csvWriter = csv.writer(file)
 
-    getTitle()  if not existFile else 0
+    getTitle()  if not existFile else getTitle("OnlyPrint")
 
     for target in targetList:
         getIpInfo(target)

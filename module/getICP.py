@@ -14,7 +14,7 @@ header = {
 def getICP(domain,replayNun=0):
     resultDict = {"domain":domain, "unitName": "-", "unitType": "-", "unitICP": "-", "title": "-"}
     try:
-        req = requests.get(url=f"https://icplishi.com/{domain}/", headers=header, timeout=20)
+        req = requests.get(url=f"https://icplishi.com/{domain}", headers=header, timeout=20)
         if req.status_code!=200 and replayNun < 2:
             replayNun += 1
             return getICP(domain,replayNun)

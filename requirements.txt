@@ -1,3 +1,4 @@
 terminal
 console
 requests
+tldextract

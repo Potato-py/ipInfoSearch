@@ -44,7 +44,7 @@ def parseArgs():
     print(printTime()+bold(f"[Info] -rt   ：  {argsObj.rankTarget}"))
     print(printTime()+bold(f"[Info] -showE：  {argsObj.showDominError}"))
     print(printTime()+bold(f"[Info] -icp  ：  {argsObj.icp}"))
-    print(printTime()+bold(f"[Info] -o    ：  ./Result/{argsObj.output}.vsv"))
+    print(printTime()+bold(f"[Info] -o    ：  ./Result/{argsObj.output}.csv"))
     return argsObj
 
 # 解析输入目标数据
@@ -207,7 +207,7 @@ def getTitle(mode=""):
         csvWriter.writerow(["ip/domain", "反查域名", "百度权重", "移动权重", "360权重", "搜狗权重", "谷歌权重"]) if mode!="OnlyPrint" else 0
 
 if __name__ == "__main__":
-    fistDate = time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())
+    fistDate = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
     fistTime = time.time()
 
     args = parseArgs()

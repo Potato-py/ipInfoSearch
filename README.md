@@ -12,6 +12,17 @@ python ipInfoSearch.py -f fileName.txt -icp -o outFileName
 ![image](/img/ipInfoSearch1.png)
 ![image](/img/ipInfoSearch2.png)
 
+## 报错处理：
+
+- 若报错：RuntimeError: maximum recursion depth exceeded
+
+- 是因为性能低导致的递归问题，请在ipInfoSearch.py头部添加
+
+```
+import sys
+sys.setrecursionlimit(10000)
+```
+
 ## 多线程用法：
 python runThread.py -c "python ipInfoSearch.py -t {{data}} -icp -o outFileName" -f fileName.txt
 注释：只需修改outFileName 以及 fileName

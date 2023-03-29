@@ -6,10 +6,13 @@ pip install -r requirements.txt
 
 ## 基本用法：
 python ipInfoSearch.py -h
+
 ![image](/img/help.png)
 
 python ipInfoSearch.py -f fileName.txt -icp -o outFileName
+
 ![image](/img/ipInfoSearch1.png)
+
 ![image](/img/ipInfoSearch2.png)
 
 ## 报错处理：
@@ -24,8 +27,14 @@ sys.setrecursionlimit(10000)
 ```
 
 ## 多线程用法：
-python runThread.py -c "python ipInfoSearch.py -t {{data}} -icp -o outFileName" -f fileName.txt
-注释：只需修改outFileName 以及 fileName
+python runThread.py -c "python ipInfoSearch.py -t {{data}} -icp -o outFileName -hidden" -f fileName.txt
+
+注释：**只需修改outFileName 以及 fileName**
+
+注释：**-hidden 为ipInfoSearch.py参数，多线程不打印干扰信息**
+
 原理：遍历fileName填充{{data}}执行命令
+
 ![image](/img/runThread1.png)
+
 ![image](/img/runThread2.png)

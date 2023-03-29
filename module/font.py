@@ -3,6 +3,7 @@
 import os
 import sys
 import string
+sys.setrecursionlimit(100000)
 
 try:
     import terminal

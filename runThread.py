@@ -19,7 +19,7 @@ def parseArgs():
     parser.add_argument("-o", dest="output", required=False, type=str, default=f"{fistDate}", help=f"输出文件 (默认输出 ./Result/{fistDate}.txt)")
     argsObj = parser.parse_args()
     if not argsObj.command or ( "{{data}}" in argsObj.command and not argsObj.file ):
-        print('\033[31m\n[Info] 多线程内部若存在输出文件，请改用时间戳命名或a+追加方式，防止覆盖输出\n[Info] 若需加载文件，启动命令需转换为单个目标 \n[x] 用法:python runThread.py [-n 线程数] [-c 执行的命令] [-f 需要遍历数据的文件] [-o 输出文件名]\n\n[-] 举例:python runThread.py -n 60 -c "python3 ipInfoSearch.py -t {{data}} -ipc -o csvOut" -f ./fileData.txt -o ipInfoText\033[0m')
+        print('\033[31m\n[Info] 多线程内部若存在输出文件，请改用时间戳命名或a+追加方式，防止覆盖输出\n[Info] 若需加载文件，启动命令需转换为单个目标 \n[x] 用法:python runThread.py [-n 线程数] [-c 执行的命令] [-f 需要遍历数据的文件] [-o 输出文件名]\n\n[-] 举例:python runThread.py -n 60 -c "python3 ipInfoSearch.py -t {{data}} -ipc -o csvOut -hidden" -f ./fileData.txt -o ipInfoText\033[0m')
         sys.exit()
     if argsObj.file:
         if not os.path.isfile(argsObj.file):
@@ -61,7 +61,6 @@ def runThread():
     end = time.time()
 
     print(f'\033[32mProgram takes time: {end - start}\033[0m')
-
 
 def func(command):
     with sem:

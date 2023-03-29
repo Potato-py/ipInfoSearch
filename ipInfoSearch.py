@@ -30,6 +30,7 @@ def parseArgs():
     parser.add_argument('-showE', dest="showDominError", required=False, action="store_true", default=False, help="展示反查域名网络错误信息 (默认关闭)")
     parser.add_argument('-icp', dest="icp", required=False, action="store_true", default=False, help="查询ICP备案信息 (默认关闭)")
     parser.add_argument("-o", dest="output", required=False, type=str, default=f"{fistDate}", help=f"输出文件 (默认输出 ./Result/{fistDate}.csv)")
+    parser.add_argument('-hidden', dest="hidden", required=False, action="store_true", default=False, help="用于多线程隐藏入参打印及任务时间打印 (默认关闭)")
     argsObj = parser.parse_args()
     if not argsObj.target and not argsObj.file:
         print(red('\n[x] 用法:python ipInfoSearch.py [-t 目标IP/域名] [-f 含多个目标的文件] [-r 权重最小值] [-icp 备案查询] [-o 输出文件]\n\n[-] 举例:python ipInfoSearch.py -t 127.0.0.1 -r 1 -icp '))
@@ -38,13 +39,14 @@ def parseArgs():
         if not os.path.isfile(argsObj.file):
             print(printTime()+f"\033[31m[Error] 加载文件[{argsObj.file}]失败\033[0m")
             sys.exit()
-    print(printTime()+bold(f"[Info] -t    ：  {argsObj.target}"))
-    print(printTime()+bold(f"[Info] -f    ：  {argsObj.file}"))
-    print(printTime()+bold(f"[Info] -r    ：  {argsObj.rank}"))
-    print(printTime()+bold(f"[Info] -rt   ：  {argsObj.rankTarget}"))
-    print(printTime()+bold(f"[Info] -showE：  {argsObj.showDominError}"))
-    print(printTime()+bold(f"[Info] -icp  ：  {argsObj.icp}"))
-    print(printTime()+bold(f"[Info] -o    ：  ./Result/{argsObj.output}.csv"))
+    if not argsObj.hidden:
+        print(printTime()+bold(f"[Info] -t    ：  {argsObj.target}"))
+        print(printTime()+bold(f"[Info] -f    ：  {argsObj.file}"))
+        print(printTime()+bold(f"[Info] -r    ：  {argsObj.rank}"))
+        print(printTime()+bold(f"[Info] -rt   ：  {argsObj.rankTarget}"))
+        print(printTime()+bold(f"[Info] -showE：  {argsObj.showDominError}"))
+        print(printTime()+bold(f"[Info] -icp  ：  {argsObj.icp}"))
+        print(printTime()+bold(f"[Info] -o    ：  ./Result/{argsObj.output}.csv"))
     return argsObj
 
 # 解析输入目标数据
@@ -123,7 +125,7 @@ def getIpInfo(target):
             printT(rtDel(tableDataList))
             csvWriter.writerow(result)
 
-            if domain != list(domainList)[-1] or target != targetList[-1]:
+            if domain != list(domainList)[-1] or target != targetList[-1] or args.hidden:
                 printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"middle") if args.icp else printT(rtDel([17,20,10,10,10,10,10]),"middle")
             else:
                 printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"bottom") if args.icp else printT(rtDel([17,20,10,10,10,10,10]),"middle")
@@ -150,7 +152,7 @@ def getIpInfo(target):
                     ]
                     printT(rtDel(tableDataList))
                     csvWriter.writerow(result)
-                    if domain != list(domainList)[-1] or target != targetList[-1]:
+                    if domain != list(domainList)[-1] or target != targetList[-1] or args.hidden:
                         printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"middle")
                     else:
                         printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"bottom")
@@ -167,7 +169,7 @@ def getIpInfo(target):
                     ]
                     printT(rtDel(tableDataList))
                     csvWriter.writerow(result)
-                    if domain != list(domainList)[-1] or target != targetList[-1]:
+                    if domain != list(domainList)[-1] or target != targetList[-1] or args.hidden:
                         printT(rtDel([17,20,10,10,10,10,10]),"middle")
                     else:
                         printT(rtDel([17,20,10,10,10,10,10]),"bottom")
@@ -175,35 +177,37 @@ def getIpInfo(target):
 
 def getTitle(mode=""):
     if args.icp:
-        printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"top")
-        tableDataList=[
-            ["ip/domain",17],
-            ["反查域名",20],
-            ["百度权重",10],
-            ["移动权重",10],
-            ["360权重",10],
-            ["搜狗权重",10],
-            ["谷歌权重",10],
-            ["单位名称",37],
-            ["单位性质",10],
-            ["备案编号",22]
-        ]
-        printT(rtDel(tableDataList),fontStyle="bold")
-        printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"middle")
+        if not args.hidden:
+            printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"top")
+            tableDataList=[
+                ["ip/domain",17],
+                ["反查域名",20],
+                ["百度权重",10],
+                ["移动权重",10],
+                ["360权重",10],
+                ["搜狗权重",10],
+                ["谷歌权重",10],
+                ["单位名称",37],
+                ["单位性质",10],
+                ["备案编号",22]
+            ]
+            printT(rtDel(tableDataList),fontStyle="bold")
+            printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"middle")
         csvWriter.writerow(["ip/domain", "反查域名", "百度权重", "移动权重", "360权重", "搜狗权重", "谷歌权重", "单位名称", "单位性质", "备案编号"]) if mode!="OnlyPrint" else 0
     else:
-        printT(rtDel([17,20,10,10,10,10,10]),"top")
-        tableDataList=[
-            ["ip/domain",17],
-            ["反查域名",20],
-            ["百度权重",10],
-            ["移动权重",10],
-            ["360权重",10],
-            ["搜狗权重",10],
-            ["谷歌权重",10]
-        ]
-        printT(rtDel(tableDataList),fontStyle="bold")
-        printT(rtDel([17,20,10,10,10,10,10]),"middle")
+        if not args.hidden:
+            printT(rtDel([17,20,10,10,10,10,10]),"top")
+            tableDataList=[
+                ["ip/domain",17],
+                ["反查域名",20],
+                ["百度权重",10],
+                ["移动权重",10],
+                ["360权重",10],
+                ["搜狗权重",10],
+                ["谷歌权重",10]
+            ]
+            printT(rtDel(tableDataList),fontStyle="bold")
+            printT(rtDel([17,20,10,10,10,10,10]),"middle")
         csvWriter.writerow(["ip/domain", "反查域名", "百度权重", "移动权重", "360权重", "搜狗权重", "谷歌权重"]) if mode!="OnlyPrint" else 0
 
 if __name__ == "__main__":
@@ -225,8 +229,9 @@ if __name__ == "__main__":
     for target in targetList:
         getIpInfo(target)
 
-    finallyDate = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
-    finallyTime = time.time()
-    timing = (finallyTime-fistTime)
-    print(printTime()+"查询完毕，用时：%f秒"%(timing))
-    print(printTime()+f"结果已保存至：{outFilePath}")
+    if not args.hidden:
+        finallyDate = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+        finallyTime = time.time()
+        timing = (finallyTime-fistTime)
+        print(printTime()+"查询完毕，用时：%f秒"%(timing))
+        print(printTime()+f"结果已保存至：{outFilePath}")

@@ -106,29 +106,30 @@ def getIpInfo(target):
     #获取权重，任意一项满足即可
     for domain in domainList:
         #反查域名存在问题的单独处理
-        if domain == "NtError" and args.showDominError:
-            result = [target, domain,'-','-','-','-','-','-','-','-']
-            tableDataList=[
-                [result[0], 17],
-                [result[1], 20],
-                [result[2], 10],
-                [result[3], 10],
-                [result[4], 10],
-                [result[5], 10],
-                [result[6], 10],
-                [result[7], 37],
-                [result[8], 10],
-                [result[9], 22]
-            ]
-            if not args.icp:
-                del tableDataList[-1],tableDataList[-1],tableDataList[-1]
-            printT(rtDel(tableDataList))
-            csvWriter.writerow(result)
+        if domain == "NtError":
+            if args.showDominError:
+                result = [target, domain,'-','-','-','-','-','-','-','-']
+                tableDataList=[
+                    [result[0], 17],
+                    [result[1], 20],
+                    [result[2], 10],
+                    [result[3], 10],
+                    [result[4], 10],
+                    [result[5], 10],
+                    [result[6], 10],
+                    [result[7], 37],
+                    [result[8], 10],
+                    [result[9], 22]
+                ]
+                if not args.icp:
+                    del tableDataList[-1],tableDataList[-1],tableDataList[-1]
+                printT(rtDel(tableDataList))
+                csvWriter.writerow(result)
 
-            if domain != list(domainList)[-1] or target != targetList[-1] or args.hidden:
-                printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"middle") if args.icp else printT(rtDel([17,20,10,10,10,10,10]),"middle")
-            else:
-                printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"bottom") if args.icp else printT(rtDel([17,20,10,10,10,10,10]),"middle")
+                if domain != list(domainList)[-1] or target != targetList[-1] or args.hidden:
+                    printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"middle") if args.icp else printT(rtDel([17,20,10,10,10,10,10]),"middle")
+                else:
+                    printT(rtDel([17,20,10,10,10,10,10,37,10,22]),"bottom") if args.icp else printT(rtDel([17,20,10,10,10,10,10]),"middle")
 
             break
 

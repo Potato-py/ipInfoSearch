@@ -1,16 +1,11 @@
-from threading import Thread, Lock, BoundedSemaphore
+from concurrent.futures import ThreadPoolExecutor
 import subprocess
 import time
 import argparse
 import os
 import sys
 
-
-sem = BoundedSemaphore(60)   #线程数锁 用法 with sem:
-lock = Lock()   #线程锁 用法 with lock:
-
 def parseArgs():
-    global sem
     fistDate = time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", dest="num", required=False, type=int, default=60, help=f"最大线程数（默认60）")
@@ -31,7 +26,6 @@ def parseArgs():
     print(f"[Info] -o    ：  ./Result/{argsObj.output}.txt")
     print(f"[Info] 多线程内部若存在输出文件，请改用时间戳命名或a+追加方式，防止覆盖输出")
     print(f"[Info] 若需加载文件，启动命令需转换为单个目标")
-    sem = BoundedSemaphore(argsObj.num)   #线程数锁 用法 with sem:
 
     return argsObj
 
@@ -48,24 +42,18 @@ def runThread():
         file.close()
 
     #   创建线程
-    thread_list = []
-    if len(targetList)>1:
-        [ thread_list.append(Thread(target=func, args=(args.command.replace("{{data}}",f"\"{i}\""),))) for i in targetList ]
-    else:
-        [ thread_list.append(Thread(target=func, args=(args.command,))) for i in range(args.num) ]
-    #   开始线程
-    [ thread.start() for thread in thread_list ]
-    #   等待线程结束
-    [ thread.join() for thread in thread_list ]
+    with ThreadPoolExecutor(max_workers=args.num) as executor:
+        if len(targetList)>1:
+            [ executor.submit(func, args.command.replace("{{data}}",f"\"{i}\"")) for i in targetList ]
+        else:
+            [ executor.submit(func, args.command) for i in range(args.num) ]
 
     end = time.time()
-
     print(f'\033[32mProgram takes time: {end - start}\033[0m')
 
 def func(command):
-    with sem:
-        #多线程 转 多进程
-        cmd = subprocess.run(command, shell=True)
+    #多线程 转 多进程
+    cmd = subprocess.run(command, shell=True)
 
 
 
